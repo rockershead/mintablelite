@@ -5,13 +5,13 @@ I have integrated the mintology api for the minting part only.The other services
 
 If you are deploying in your own aws account, please remember to have your own serverless.env.yml file.An example of the file is in the repository named serverless.env.example.yml. The list of endpoints are:
 
-POST - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/register
-POST - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/login
-POST - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/collection
-POST - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/nft/{id}
-GET - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/nft/{id}
-GET - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/nfts/{collectionId}/tokens/{tokenId}
-GET - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/nft
+POST - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/register  
+POST - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/login  
+POST - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/collection  
+POST - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/nft/{id}  
+GET - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/nft/{id}  
+GET - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/nfts/{collectionId}/tokens/{tokenId}  
+GET - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/nft  
 
 
 Architecture diagram:
