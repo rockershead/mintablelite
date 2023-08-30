@@ -1,6 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 
 
+
 const register = {
   handler: 'src/functions/index.register',
   events: [
@@ -15,22 +16,7 @@ const register = {
           headers: ['x-api-key', 'Content-Type'],
           allowCredentials: false,
         },
-        requestBody: {
-          content: {
-            'application/json': {
-              schema: {
-                // Define the schema for the request body here
-                type: 'object',
-                properties: {
-                  username: { type: 'string' },
-                  password: { type: 'string' },
-                  walletAddress:{type:'string'}
-                },
-                required: ['username', 'password','walletAddress'],
-              },
-            },
-          },
-        },
+        bodyType:'Register',
       },
     },
   ],
@@ -62,6 +48,14 @@ const createCollection={
         path: '/collection',
         method: 'post',
         private: true,
+        headerParameters: {
+          Authorization: {
+              required: true,
+              type: 'string',
+              description: 'Bearer token',
+          },
+          
+      },
         cors: {
           origin: '*',
           headers: ['x-api-key', 'Content-Type'],
@@ -146,7 +140,15 @@ const listCollections={
           origin: '*',
           headers: ['x-api-key', 'Content-Type'],
           allowCredentials: false,
-        }
+        },
+        headerParameters: {
+          Authorization: {
+              required: true,
+              type: 'string',
+              description: 'Bearer token',
+          },
+          
+      }
        
       },
     },
@@ -166,9 +168,11 @@ const serverlessConfiguration: AWS = {
         value: '${file(./serverless.env.yml):staging.API_KEY}',
       },
     ],
-    autoSwagger:{
+    autoswagger:{
       title:'mintablelite-api',
-      apiKeyHeaders: ['Authorization']
+      apiKeyHeaders: ['x-api-key'],
+      typefiles:['src/types/users.d.ts'],
+      host: 'https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com'
     }
   },
   provider: {
