@@ -5,8 +5,14 @@ import User from '../models/User';
 import {Nft,IToken,Token} from '../models/Nft';
 import { mint } from '../libs/nft';
 import * as bcrypt from 'bcryptjs';
+let metaData = {
+  headers: {
+    "Access-Control-Allow-Origin": "*",   //need to restrict
+  },
+};
 
 export const register = async (event: APIGatewayProxyEvent) => {
+  
   try {
     await mongoConnect();
     
@@ -14,12 +20,15 @@ export const register = async (event: APIGatewayProxyEvent) => {
     
     const { email, password, walletAddress } = body;
     const _password = await hashPassword(password);
+
+    
     
     // Check if user exists
     const user = await User.findOne({ email: email });
     console.log(user)
     if (user) {
       return {
+        ...metaData,
         statusCode: 400,
         body: JSON.stringify({
           message: 'This user already exists.',
@@ -36,11 +45,13 @@ export const register = async (event: APIGatewayProxyEvent) => {
     const savedUser = await newUser.save();
 
     return {
+      ...metaData,
       statusCode: 200,
       body: JSON.stringify(savedUser),
     };
   } catch (err) {
     return {
+      ...metaData,
       statusCode: 500,
       body: JSON.stringify({
         message: err,
@@ -54,10 +65,12 @@ export const register = async (event: APIGatewayProxyEvent) => {
 export const login = async (
     event: APIGatewayProxyEvent
   ) => {
+   
     try {
       await mongoConnect();
       const body = JSON.parse(event.body || '');
       const { email, password } = body;
+      
   
       const user = await User.findOne({ email: email });
   
@@ -66,6 +79,7 @@ export const login = async (
   
         if (!isMatchedPassword) {
           return {
+            ...metaData,
             statusCode: 400,
             body: JSON.stringify({
               message: 'Incorrect email or password',
@@ -76,6 +90,7 @@ export const login = async (
         const { accessToken, refreshToken } = await generateTokens(user);
   
         return {
+          ...metaData,
           statusCode: 200,
           body: JSON.stringify({
             userId: user._id,
@@ -85,6 +100,7 @@ export const login = async (
         };
       } else {
         return {
+          ...metaData,
           statusCode: 400,
           body: JSON.stringify({
             message: 'Incorrect email or password',
@@ -93,6 +109,7 @@ export const login = async (
       }
     } catch (err) {
       return {
+        ...metaData,
         statusCode: 500,
         body: JSON.stringify({
           message: err,
@@ -106,7 +123,8 @@ export const createCollection = async (
   ) => {
     console.log(event)
     const payload = await authenticate(event);
-  
+    
+    
     if (payload.userId) {
       try {
         const { userId } = payload;
@@ -121,6 +139,7 @@ export const createCollection = async (
   
         if (collection) {
           return {
+            ...metaData,
             statusCode: 400,
             body: JSON.stringify({
               message: 'This collection name exists. Please choose another collection name',
@@ -143,11 +162,13 @@ export const createCollection = async (
         await user.save();
   
         return {
+          ...metaData,
           statusCode: 200,
           body: JSON.stringify(savedCollection),
         };
       } catch (err) {
         return {
+          ...metaData,
           statusCode: 500,
           body: JSON.stringify({
             message: err,
@@ -156,6 +177,7 @@ export const createCollection = async (
       }
     } else {
       return {
+        ...metaData,
         statusCode: 500,
         body: JSON.stringify({
           message: 'Not authorized',
@@ -171,6 +193,7 @@ export const listCollections = async (event: APIGatewayProxyEvent) => {
   
       if (!payload.userId) {
         return {
+          ...metaData,
           statusCode: 500,
           body: JSON.stringify({
             message: 'Not authorized',
@@ -192,11 +215,13 @@ export const listCollections = async (event: APIGatewayProxyEvent) => {
       
   
       return {
+        ...metaData,
         statusCode: 200,
         body: JSON.stringify(nftCollections),
       };
     } catch (err) {
       return {
+        ...metaData,
         statusCode: 500,
         body: JSON.stringify({
           message: err instanceof Error ? err.message : err,
@@ -225,6 +250,7 @@ export const createNft = async (
   
         if (!nftCollection) {
           return {
+            ...metaData,
             statusCode: 400,
             body: JSON.stringify({
               message: 'Collection does not exist for this user',
@@ -255,6 +281,7 @@ export const createNft = async (
         await nftCollection.save();
   
         const response: APIGatewayProxyResult = {
+          ...metaData,
           statusCode: res.statusCode,
           body: JSON.stringify(res.body),
         };
@@ -262,12 +289,14 @@ export const createNft = async (
         return response;
       } catch (err) {
         return {
+          ...metaData,
           statusCode: 500,
           body: JSON.stringify({ message: 'Error creating nft', err }),
         };
       }
     } else {
       return {
+        ...metaData,
         statusCode: 500,
         body: JSON.stringify({
           message: 'Not authorized',
@@ -283,6 +312,7 @@ export const listNftTokens = async (event: APIGatewayProxyEvent) => {
   
       if (!payload.userId) {
         return {
+          ...metaData,
           statusCode: 500,
           body: JSON.stringify({
             message: 'Not authorized',
@@ -301,6 +331,7 @@ export const listNftTokens = async (event: APIGatewayProxyEvent) => {
   
       if (!nftCollection) {
         return {
+          ...metaData,
           statusCode: 400,
           body: JSON.stringify({
             message: 'Collection does not exist for this user',
@@ -313,11 +344,13 @@ export const listNftTokens = async (event: APIGatewayProxyEvent) => {
       const tokens = nft?.tokens ?? [];
   
       return {
+        ...metaData,
         statusCode: 200,
         body: JSON.stringify(tokens),
       };
     } catch (err) {
       return {
+        ...metaData,
         statusCode: 500,
         body: JSON.stringify({
           message: err instanceof Error ? err.message : err,
@@ -333,6 +366,7 @@ export const showNftToken = async (event: APIGatewayProxyEvent) => {
   
       if (!payload.userId) {
         return {
+          ...metaData,
           statusCode: 500,
           body: JSON.stringify({
             message: 'Not authorized',
@@ -351,6 +385,7 @@ export const showNftToken = async (event: APIGatewayProxyEvent) => {
   
       if (!nftCollection) {
         return {
+          ...metaData,
           statusCode: 400,
           body: JSON.stringify({
             message: 'Collection does not exist for this user',
@@ -364,11 +399,13 @@ export const showNftToken = async (event: APIGatewayProxyEvent) => {
       const token = tokens.find((obj) => obj._id === tokenId);
   
       return {
+        ...metaData,
         statusCode: 200,
         body: JSON.stringify(token),
       };
     } catch (err) {
       return {
+        ...metaData,
         statusCode: 500,
         body: JSON.stringify({
           message: err instanceof Error ? err.message : err,
