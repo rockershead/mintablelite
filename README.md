@@ -13,6 +13,7 @@ GET - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/nft/{id}
 GET - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/nfts/{collectionId}/tokens/{tokenId}  
 GET - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/nft  
 
+Having some technical issues with creating the Open API documentation on swagger.You can access the endpoints by uploading the mintablelite.postman_collection.json file to your postman tool.  
 
 Architecture diagram:
 
