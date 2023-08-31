@@ -16,5 +16,9 @@ GET - https://5f70zzno8d.execute-api.ap-southeast-1.amazonaws.com/dev/nft
 
 Architecture diagram:
 
+![Mintablelite-Secure solution](https://github.com/rockershead/mintablelite/assets/35405146/baa08c3d-acce-4d0e-9b8b-d7f8fcdd5737)
 
-![Mintablelite](https://github.com/rockershead/mintablelite/assets/35405146/93c0e903-3ce3-4009-8eed-16cff4e7be9e)
+
+
+
+
